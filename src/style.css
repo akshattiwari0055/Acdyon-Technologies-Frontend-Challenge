@@ -904,20 +904,25 @@ h3 {
 .lock-kicker {
   position: relative;
   margin-bottom: 8px;
-  color: color-mix(in srgb, var(--band-text) 72%, transparent);
+  color: rgba(255, 250, 242, 0.82);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.65),
+    0 0 18px rgba(56, 178, 166, 0.45);
 }
 
 .lock-message {
   position: relative;
+  color: #fffaf2;
   font-size: clamp(1.7rem, 6vw, 2.45rem);
   line-height: 1;
   text-align: center;
-  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 3px 14px rgba(0, 0, 0, 0.76),
+    0 0 30px rgba(56, 178, 166, 0.42);
 }
 
 .focus-mode .task-card,
