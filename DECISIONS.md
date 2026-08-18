@@ -17,3 +17,6 @@ The dashboard is a polished static prototype rather than a connected application
 
 ## AI usage and personal verification
 AI helped draft and implement the first version quickly. I personally aligned the content with the challenge criteria, removed any fake social proof, verified that the product data is labeled as sample data, added responsive/dark-mode behavior, and checked the build output before handoff.
+
+## Bonus
+Hidden easter egg: enter the Konami code on the home page to unlock Focus mode.
