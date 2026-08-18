@@ -2,6 +2,10 @@
 
 Premium responsive home page built for the Acdyon Technologies frontend challenge.
 
+## Latest Live Deployment
+
+https://acdyon-technologies-frontend-challenge-pg6bhxtao.vercel.app
+
 ## Track
 
 Part 2: The Premium Home Page.
