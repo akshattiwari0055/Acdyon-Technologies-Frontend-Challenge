@@ -227,7 +227,19 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </section>
   </main>
 
-  <div class="toast" role="status" aria-live="polite">Focus mode unlocked</div>
+  <div class="lock-overlay" aria-hidden="true">
+    <div class="lock-stage">
+      <div class="lock-3d" aria-hidden="true">
+        <div class="lock-shackle"></div>
+        <div class="lock-body">
+          <span class="lock-keyhole"></span>
+        </div>
+        <div class="lock-shine"></div>
+      </div>
+      <p class="lock-kicker">Bonus mode</p>
+      <strong class="lock-message">Focus mode unlocked</strong>
+    </div>
+  </div>
 `
 
 const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle')!
@@ -400,14 +412,69 @@ document.querySelectorAll<HTMLElement>('.task-card').forEach((card) => {
 
 const konami = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a']
 let konamiIndex = 0
+let focusModeEnabled = false
+let lockHideTimeout: number | undefined
+
+function playLockAnimation(unlocked: boolean) {
+  const overlay = document.querySelector<HTMLElement>('.lock-overlay')
+  const message = document.querySelector<HTMLElement>('.lock-message')
+  const shackle = document.querySelector<HTMLElement>('.lock-shackle')
+
+  if (!overlay || !message || !shackle) return
+
+  message.textContent = unlocked ? 'Focus mode unlocked' : 'Focus mode locked'
+  overlay.setAttribute('aria-hidden', 'false')
+  if (lockHideTimeout) {
+    window.clearTimeout(lockHideTimeout)
+  }
+  gsap.killTweensOf(['.lock-overlay', '.lock-stage', '.lock-3d', '.lock-shackle', '.lock-shine'])
+
+  const timeline = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    onComplete: () => {
+      lockHideTimeout = window.setTimeout(() => {
+        gsap.to('.lock-overlay', {
+          autoAlpha: 0,
+          duration: 0.35,
+          onComplete: () => overlay.setAttribute('aria-hidden', 'true'),
+        })
+      }, 900)
+    },
+  })
+
+  timeline
+    .set(shackle, { x: 0, y: 0, rotate: 0, transformOrigin: '18px 54px' })
+    .fromTo('.lock-overlay', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 })
+    .fromTo('.lock-stage', { y: 44, scale: 0.72, rotateX: 24 }, { y: 0, scale: 1, rotateX: 0, duration: 0.62, ease: 'back.out(1.8)' }, '<')
+    .fromTo('.lock-3d', { rotateY: -42, rotateX: 20, z: -80 }, { rotateY: 0, rotateX: 0, z: 0, duration: 0.76, ease: 'power3.out' }, '<')
+    .fromTo('.lock-message, .lock-kicker', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, stagger: 0.06, duration: 0.32 }, '-=0.22')
+
+  if (unlocked) {
+    timeline
+      .to(shackle, { y: -24, duration: 0.24, ease: 'power2.out' }, '-=0.18')
+      .to(shackle, { x: 38, rotate: 42, duration: 0.42, ease: 'back.out(1.7)' })
+      .to('.lock-3d', { rotateY: 10, duration: 0.22, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '-=0.22')
+  } else {
+    timeline
+      .set(shackle, { x: 38, y: -24, rotate: 42 })
+      .to(shackle, { x: 0, rotate: 0, duration: 0.34, ease: 'power3.inOut' }, '-=0.1')
+      .to(shackle, { y: 0, duration: 0.22, ease: 'bounce.out' })
+      .to('.lock-body', { y: 5, duration: 0.1, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '-=0.16')
+  }
+
+  timeline
+    .fromTo('.lock-shine', { xPercent: -120, autoAlpha: 0 }, { xPercent: 145, autoAlpha: 1, duration: 0.55 }, '-=0.35')
+}
+
 window.addEventListener('keydown', (event) => {
   const key = event.key.toLowerCase()
   if (key === konami[konamiIndex]) {
     konamiIndex += 1
     if (konamiIndex === konami.length) {
-      document.body.classList.add('focus-mode')
-      gsap.fromTo('.toast', { autoAlpha: 0, y: 14, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.7)' })
-      gsap.fromTo('.hero-product', { boxShadow: '0 0 0 rgba(15, 118, 110, 0)' }, { boxShadow: '0 0 0 5px rgba(15, 118, 110, 0.18), 0 34px 100px rgba(39, 31, 22, 0.22)', duration: 0.55, ease: 'power3.out' })
+      focusModeEnabled = !focusModeEnabled
+      document.body.classList.toggle('focus-mode', focusModeEnabled)
+      playLockAnimation(focusModeEnabled)
+      gsap.fromTo('.hero-product', { boxShadow: '0 0 0 rgba(15, 118, 110, 0)' }, { boxShadow: focusModeEnabled ? '0 0 0 5px rgba(15, 118, 110, 0.18), 0 34px 100px rgba(39, 31, 22, 0.22)' : '0 24px 70px rgba(39, 31, 22, 0.16)', duration: 0.55, ease: 'power3.out' })
       konamiIndex = 0
     }
   } else {
