@@ -398,17 +398,19 @@ document.querySelectorAll<HTMLElement>('.task-card').forEach((card) => {
   })
 })
 
-const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+const konami = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a']
 let konamiIndex = 0
 window.addEventListener('keydown', (event) => {
-  if (event.key === konami[konamiIndex]) {
+  const key = event.key.toLowerCase()
+  if (key === konami[konamiIndex]) {
     konamiIndex += 1
     if (konamiIndex === konami.length) {
       document.body.classList.add('focus-mode')
-      gsap.fromTo('.toast', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.35, yoyo: true, repeat: 1, repeatDelay: 1.6 })
+      gsap.fromTo('.toast', { autoAlpha: 0, y: 14, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.7)' })
+      gsap.fromTo('.hero-product', { boxShadow: '0 0 0 rgba(15, 118, 110, 0)' }, { boxShadow: '0 0 0 5px rgba(15, 118, 110, 0.18), 0 34px 100px rgba(39, 31, 22, 0.22)', duration: 0.55, ease: 'power3.out' })
       konamiIndex = 0
     }
   } else {
-    konamiIndex = 0
+    konamiIndex = key === konami[0] ? 1 : 0
   }
 })

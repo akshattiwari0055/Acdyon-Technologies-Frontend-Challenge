@@ -765,12 +765,14 @@ h3 {
   right: 20px;
   bottom: 20px;
   z-index: 50;
-  padding: 12px 14px;
-  border: 1px solid var(--line);
+  padding: 13px 16px;
+  border: 1px solid color-mix(in srgb, var(--teal) 38%, var(--line));
   border-radius: 7px;
-  color: var(--text);
-  background: var(--surface);
-  box-shadow: var(--shadow);
+  color: var(--band-text);
+  background: linear-gradient(135deg, var(--band), color-mix(in srgb, var(--band) 86%, var(--teal)));
+  box-shadow: var(--shadow-strong);
+  font-size: 0.9rem;
+  font-weight: 800;
   opacity: 0;
   visibility: hidden;
 }
@@ -778,6 +780,16 @@ h3 {
 .focus-mode .task-card,
 .focus-mode .hero-product {
   border-color: color-mix(in srgb, var(--teal) 60%, var(--line));
+}
+
+.focus-mode .scroll-progress {
+  height: 5px;
+  background: linear-gradient(90deg, var(--amber), var(--teal), var(--coral));
+}
+
+.focus-mode .brand-mark {
+  transform: rotate(45deg);
+  transition: transform 240ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
